@@ -1,12 +1,25 @@
 #include <stdio.h>
 #include "include/menu.h"
+#include "include/flashcard.h"
 
 void actionStudy() {
     printf("Starting study...\n");
 }
 
 void actionCreateFlashcards() {
+    char back[256];
+    char front[256];
+    
+    //TODO: Add file I/O for flashcards
     printf("Creating flashcards...\n");
+
+    printf("Enter the back of the card: ");
+    scanf("%s", back);
+
+    printf("Enter the front of the card: ");
+    scanf("%s", front);
+
+    Flashcard* card = createFlashcard(back, front);
 }
 
 void actionViewDecks() {
