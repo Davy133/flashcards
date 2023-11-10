@@ -1,4 +1,4 @@
-#include "include/flashcard.h"
+#include "flashcard.h"
 
 //TODO: Add file I/O for flashcards
 
@@ -12,7 +12,7 @@ Flashcard* createFlashcard(const char* back, const char* front) {
 void deleteFlashcard(Flashcard* card) {
     free(card->question);
     free(card->answer);
-    free(card);
+    free(card); 
     //TODO: Delete card from file.
 }
 

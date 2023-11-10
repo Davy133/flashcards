@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "include/menu.h"
-#include "include/flashcard.h"
+#include "menu.h"
+#include "flashcard.h"
 
 void actionStudy() {
     printf("Starting study...\n");

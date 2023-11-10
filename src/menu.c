@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "include/menu.h"
+#include "menu.h"
 
 void displayMenu(const struct Menu* menu) {
     printf("%s\n", menu->title);
