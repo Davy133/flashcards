@@ -27,6 +27,8 @@ void actionViewDecks() {
 }
 
 int main() {
+    Decks* decks = startDecks();
+
     struct MenuItem mainMenuItems[] = {
         {1, "Study", actionStudy},
         {2, "Create Flashcards", actionCreateFlashcards},
