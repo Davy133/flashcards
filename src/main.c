@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "include/menu.h"
-#include "include/flashcard.h"
+#include "menu.h"
+#include "flashcard.h"
 
 void actionStudy() {
     printf("Starting study...\n");
@@ -27,6 +27,8 @@ void actionViewDecks() {
 }
 
 int main() {
+    Decks* decks = startDecks();
+
     struct MenuItem mainMenuItems[] = {
         {1, "Study", actionStudy},
         {2, "Create Flashcards", actionCreateFlashcards},
