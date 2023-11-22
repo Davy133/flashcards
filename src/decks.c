@@ -1,36 +1,63 @@
 #include <decks.h>
 #include <user_data_bus.h>
-//TODO: Add file I/O for flashcards
 
 Deck* createDeck(char* deckName, cJSON* user_context){
     Deck* newDeck = (Deck*) malloc(sizeof(Deck));
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = cJSON_CreateObject();
     cJSON_AddItemToArray(decks, deck);
- 
     if (newDeck != NULL){
         newDeck -> label = deckName;
         newDeck -> first = NULL;
         newDeck -> last = NULL;
         newDeck -> next = NULL;
-        
         cJSON* jsonDeck = deckToJson(newDeck);
         cJSON_AddItemToObject(deck, "deck", jsonDeck);
-        saveUserData(user_context);        
-
-
+        saveUserData(user_context);
+        *user_context = *initializeUserDataBus();
     } else {
         printf("Falha na criação de um novo deck...\n");
     }
     return newDeck;
 }
 
-void deleteDeck(Deck* deck, cJSON* user_context){
-    if (deck != NULL){
-        free(deck);
-    } else {
-        printf("Falha na remoção do deck...\n");
-    }
+void deleteDeck(int position, cJSON* user_context){
+    cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
+    cJSON* deck = cJSON_GetArrayItem(decks, position);
+    cJSON_DeleteItemFromArray(decks, position);
+    saveUserData(user_context);
+    *user_context = *initializeUserDataBus();
+}
+
+void viewDecks(cJSON* user_context){
+    printf("Decks:\n");
+    cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
+    cJSON* deck = NULL;
+    int index = 0;
+    cJSON_ArrayForEach(deck, decks){
+        cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+        cJSON* label = cJSON_GetObjectItemCaseSensitive(jsonDeck, "label");
+        printf("Deck %d: %s\n", index, label->valuestring);
+        index++;
+        }
+}
+
+void viewDeck(cJSON* user_context, int position){
+    cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
+    cJSON* deck = cJSON_GetArrayItem(decks, position);
+    cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON* label = cJSON_GetObjectItemCaseSensitive(jsonDeck, "label");
+    printf("Deck %d: %s\n", position, label->valuestring);
+}
+
+void updateDeck(cJSON* user_context, int position, const char* newLabel){
+    cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
+    cJSON* deck = cJSON_GetArrayItem(decks, position);
+    cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON* label = cJSON_GetObjectItemCaseSensitive(jsonDeck, "label");
+    label -> valuestring = strdup(newLabel);
+    saveUserData(user_context);
+    *user_context = *initializeUserDataBus();
 }
 
 
@@ -43,18 +70,6 @@ Decks* startDecks(){
         printf("Falha na inicialização...\n");
     }
     return decks;
-}
-
-void viewDecks(Decks* decks, cJSON* user_context){
-    Deck* auxDeck = decks -> first;
-    if (decks -> first != NULL){
-        while (auxDeck != NULL){
-            printf("%s\n", auxDeck -> label);
-            auxDeck = auxDeck -> next;
-        }
-    } else {
-        printf("Sua lista de decks está vazia...\n ");
-    }
 }
 
 void addFlashcardToDeck(Deck* deck, Flashcard* card){

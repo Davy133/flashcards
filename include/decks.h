@@ -20,8 +20,11 @@ typedef struct Decks {
 
 Decks* startDecks();
 Deck* createDeck(char* deckName, cJSON* user_context);
-void deleteDeck(Deck* deck, cJSON* user_context);
-void viewDecks(Decks* decks, cJSON* user_context);
+
+void deleteDeck(int position, cJSON* user_context);
+void viewDecks(cJSON* user_context);
+void viewDeck(cJSON* user_context, int position);
+void updateDeck(cJSON* user_context, int position, const char* newLabel);
 
 void addFlashcardToDeck(Deck* deck, Flashcard* card);
 void removeFlashcardFromDeck(Deck* deck, Flashcard* card);

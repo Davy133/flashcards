@@ -39,7 +39,6 @@ void saveDeckToFile(Decks* decks, const char* filename){
     fclose(file);
     free(jsonStr);
     cJSON_Delete(json);
-
 }
 
 Deck* loadDeckFromFile(const char* filename, cJSON* user_context){

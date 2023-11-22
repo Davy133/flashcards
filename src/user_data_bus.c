@@ -4,8 +4,7 @@
 #include "user_data_bus.h"
 #include "cJSON.h"
 
-void initializeUserDataBus(cJSON* root) {
-    // Check if the file exists
+cJSON* initializeUserDataBus() {
     if (access("userdata.json", F_OK) != -1) {
         FILE* file = fopen("userdata.json", "r");
         if (file != NULL) {
@@ -15,9 +14,10 @@ void initializeUserDataBus(cJSON* root) {
             char* json_data = malloc(file_size + 1);
             fread(json_data, 1, file_size, file);
             fclose(file);
-            root = cJSON_Parse(json_data);
+            cJSON* root = cJSON_Parse(json_data);
             free(json_data);
             printf("userdata.json loaded.\n");
+            return root;
         } else {
             printf("Failed to load userdata.json.\n");
         }
@@ -31,6 +31,7 @@ void initializeUserDataBus(cJSON* root) {
             fputs(json_data, file);
             fclose(file);
             printf("userdata.json created.\n");
+            return root;
         } else {
             printf("Failed to create userdata.json.\n");
         }
