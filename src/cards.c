@@ -4,30 +4,28 @@
 
 Flashcard* createFlashcard(const char* back, const char* front) {
     Flashcard* card = (Flashcard*)malloc(sizeof(Flashcard));
-    card->question = strdup(back);
-    card->answer = strdup(front);
+    card->front = strdup(back);
+    card->back = strdup(front);
     return card;
 }
 
 void deleteFlashcard(Flashcard* card) {
-    free(card->question);
-    free(card->answer);
+    free(card->front);
+    free(card->back);
     free(card); 
-    //TODO: Delete card from file.
 }
 
 void updateFlashcard(Flashcard* card, const char* back, const char* front) {
-    free(card->question);
-    free(card->answer);
-    card->question = strdup(back);
-    card->answer = strdup(front);
-    //TODO: Update card in file.
+    free(card->front);
+    free(card->back);
+    card->front = strdup(back);
+    card->back = strdup(front);
 }
 
-const char* getFlashcardQuestion(const Flashcard* card) {
-    return card->question;
+const char* getFlashcardfront(const Flashcard* card) {
+    return card->front;
 }
 
-const char* getFlashcardAnswer(const Flashcard* card) {
-    return card->answer;
+const char* getFlashcardback(const Flashcard* card) {
+    return card->back;
 }

@@ -16,9 +16,9 @@ cJSON* deckToJson(Deck* deck){
     return json;
 }
 
-Deck* deckFromJson(cJSON* json){
+Deck* deckFromJson(cJSON* json, cJSON* user_context){
     cJSON* label = cJSON_GetObjectItem(json, "label");
-    Deck* deck = createDeck(label -> valuestring);
+    Deck* deck = createDeck(label -> valuestring, user_context);
     cJSON* cards = cJSON_GetObjectItem(json, "cards");
     cJSON* card = cards -> child;
     while (card != NULL){
@@ -42,7 +42,7 @@ void saveDeckToFile(Decks* decks, const char* filename){
 
 }
 
-Deck* loadDeckFromFile(const char* filename){
+Deck* loadDeckFromFile(const char* filename, cJSON* user_context){
     FILE* file = fopen(filename, "r");
     fseek(file, 0, SEEK_END);
     long fileSize = ftell(file);
@@ -54,5 +54,5 @@ Deck* loadDeckFromFile(const char* filename){
     cJSON* cards = cJSON_GetObjectItem(json, "cards");
     cJSON* deckName = cJSON_GetObjectItem(json, "label");
     cJSON* card = cards -> child;
-    Deck* auxDeck = createDeck(deckName -> valuestring);
+    Deck* auxDeck = createDeck(deckName -> valuestring, user_context);
 }

@@ -4,8 +4,8 @@
 #include <string.h>
 
 typedef struct Flashcard {
-    char* question;
-    char* answer;
+    char* front;
+    char* back;
     struct Flashcard* next;
 } Flashcard;
 
