@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "menu.h"
-#include "flashcard.h"
+#include "cards.h"
+#include "decks.h"
+#include <cjson/cJSON.h>
 
 void actionStudy() {
     printf("Starting study...\n");

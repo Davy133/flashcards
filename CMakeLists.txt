@@ -4,7 +4,8 @@ project(flashcards C)
 set(SOURCES
     src/main.c
     src/menu.c
-    src/flashcard.c
+    src/cards.c
+    src/decks.c
     src/cJSON.c
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
