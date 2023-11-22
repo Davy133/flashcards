@@ -5,8 +5,8 @@ set(SOURCES
     src/main.c
     src/menu.c
     src/flashcard.c
+    src/cJSON.c
 )
-
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
