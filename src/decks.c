@@ -1,8 +1,9 @@
 #include <decks.h>
-Deck* createDeck(char* dakeName){
+
+Deck* createDeck(char* deckName){
     Deck* newDeck = (Deck*) malloc(sizeof(Deck));
     if (newDeck != NULL){
-        newDeck -> label = dakeName;
+        newDeck -> label = deckName;
     } else {
         printf("Falha na criação de um novo deck...\n");
     }
@@ -30,6 +31,98 @@ void viewDecks(Decks* decks){
             auxDeck = auxDeck -> next;
         }
     } else {
-        printf("Sua lista de deks está vazia...\n ");
+        printf("Sua lista de decks está vazia...\n ");
+    }
+}
+
+void addFlashcardToDeck(Deck* deck, Flashcard* card){
+    if (deck -> first == NULL){
+        deck -> first = card;
+        deck -> last = card;
+    } else {
+        deck -> last -> next = card;
+        deck -> last = card;
+    }
+    //TUDO: update deck in file
+}
+
+void removeFlashcardFromDeck(Deck* deck, Flashcard* card){
+    Flashcard* auxCard = deck -> first;
+    if (deck -> first != NULL){
+        if (deck -> first == card){
+            deck -> first = card -> next;
+            free(card);
+        } else {
+            while (auxCard -> next != card){
+                auxCard = auxCard -> next;
+            }
+            auxCard -> next = card -> next;
+            free(card);
+        }
+    } else {
+        printf("Sua lista de flashcards está vazia...\n");
+    }
+    //TUDO: update deck in file
+}
+
+void viewFlashcardsFromDeck(Deck* deck){
+    Flashcard* auxCard = deck -> first;
+    if (deck -> first != NULL){
+        while (auxCard != NULL){
+            printf("%s\n", auxCard -> question);
+            printf("%s\n", auxCard -> answer);
+            auxCard = auxCard -> next;
+        }
+    } else {
+        printf("Sua lista de flashcards está vazia...\n");
+    }
+}
+
+void updateFlashcardFromDeck(Deck* deck, Flashcard* card, const char* front, const char* back){
+    Flashcard* auxCard = deck -> first;
+    if (deck -> first != NULL){
+        if (deck -> first == card){
+            card -> question = strdup(back);
+            card -> answer = strdup(front);
+        } else {
+            while (auxCard -> next != card){
+                auxCard = auxCard -> next;
+            }
+            card -> question = strdup(back);
+            card -> answer = strdup(front);
+        }
+    } else {
+        printf("Sua lista de flashcards está vazia...\n");
+    }
+    //TUDO: update deck in file
+}
+
+void viewFlashcardsFromDeck(Deck* deck){
+    Flashcard* auxCard = deck -> first;
+    if (deck -> first != NULL){
+        while (auxCard != NULL){
+            printf("%s\n", auxCard -> question);
+            printf("%s\n", auxCard -> answer);
+            auxCard = auxCard -> next;
+        }
+    } else {
+        printf("Sua lista de flashcards está vazia...\n");
+    }
+}
+
+void studyDeck(Deck* deck){
+    Flashcard* auxCard = deck -> first;
+    if (deck -> first != NULL){
+        while (auxCard != NULL){
+            printf("%s\n", auxCard -> question);
+            printf("Pressione enter para ver a resposta...\n");
+            getchar();
+            printf("%s\n", auxCard -> answer);
+            printf("Pressione enter para continuar...\n");
+            getchar();
+            auxCard = auxCard -> next;
+        }
+    } else {
+        printf("Sua lista de flashcards está vazia...\n");
     }
 }
