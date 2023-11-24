@@ -9,9 +9,8 @@
 typedef struct Deck Deck;
 typedef struct Decks Decks;
 
-// Function declarations
 Deck* deckFromJson(cJSON* json, cJSON* user_context);
-void saveDeckToFile(Decks* deck, const char* filename);
+void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position);
 Deck* loadDeckFromFile(const char* filename, cJSON* user_context);
 cJSON* deckToJson(Deck* deck);
 
