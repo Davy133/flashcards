@@ -2,8 +2,8 @@
 #include "menu_handler.h"
 #include "cards.h"
 #include "decks.h"
-#include <cjson/cJSON.h>
-#include <deck_serializer.h>
+#include "cJSON.h"
+#include "deck_serializer.h"
 #include "user_data_bus.h"
 
 void actionCreateDeck(cJSON* user_context){
