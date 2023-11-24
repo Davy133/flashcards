@@ -1,7 +1,5 @@
 #include "cards.h"
 
-//TODO: Add file I/O for flashcards
-
 Flashcard* createFlashcard(const char* back, const char* front) {
     Flashcard* card = (Flashcard*)malloc(sizeof(Flashcard));
     card->front = strdup(back);

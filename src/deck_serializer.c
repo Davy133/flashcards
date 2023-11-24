@@ -1,4 +1,6 @@
 #include <deck_serializer.h>
+#include <stdio.h>
+#include <unistd.h>
 
 cJSON* deckToJson(Deck* deck){
     cJSON* json = cJSON_CreateObject();
@@ -16,42 +18,62 @@ cJSON* deckToJson(Deck* deck){
     return json;
 }
 
-Deck* deckFromJson(cJSON* json, cJSON* user_context){
-    cJSON* label = cJSON_GetObjectItem(json, "label");
-    Deck* deck = createDeck(label -> valuestring, user_context);
-    cJSON* cards = cJSON_GetObjectItem(json, "cards");
+// Deck* deckFromJson(cJSON* json, cJSON* user_context){
+//     cJSON* label = cJSON_GetObjectItem(json, "label");
+//     Deck* deck = createDeck(label -> valuestring, user_context);
+//     cJSON* cards = cJSON_GetObjectItem(json, "cards");
+//     cJSON* card = cards -> child;
+//     while (card != NULL){
+//         addFlashcardToDeck(deck, createFlashcard(card -> valuestring, card -> valuestring));
+//         card = card -> next;
+//     }
+//     return deck;
+// }
+
+void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position){
+    cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
+    cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
+    cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON* label = cJSON_GetObjectItemCaseSensitive(jsonDeck, "label");
+    cJSON* cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
     cJSON* card = cards -> child;
+    char jsonFilename[strlen(filename) + 5]; // 5 is the length of ".json" plus null terminator
+    strcpy(jsonFilename, filename);
+    strcat(jsonFilename, ".json");
+    FILE* file = fopen(jsonFilename, "w");
+    fprintf(file, "{\n");
+    fprintf(file, "\t\"label\": \"%s\",\n", label -> valuestring);
+    fprintf(file, "\t\"cards\": [\n");
     while (card != NULL){
-        addFlashcardToDeck(deck, createFlashcard(card -> valuestring, card -> valuestring));
+        fprintf(file, "\t\t{\n");
+        fprintf(file, "\t\t\t\"front\": \"%s\",\n", card -> valuestring);
+        fprintf(file, "\t\t\t\"back\": \"%s\"\n", card -> valuestring);
+        fprintf(file, "\t\t},\n");
         card = card -> next;
     }
-    return deck;
-}
-
-void saveDeckToFile(Decks* decks, const char* filename){
-    cJSON* json = cJSON_CreateArray();
-    cJSON* cards = cJSON_CreateObject();
-    cJSON_AddItemToArray(json, cards);
-    cJSON_AddItemToObject(cards, "cards", deckToJson(decks -> first));
-    char* jsonStr = cJSON_Print(json);
-    FILE* file = fopen(filename, "w");
-    fwrite(jsonStr, 1, strlen(jsonStr), file);
+    fprintf(file, "\t]\n");
+    fprintf(file, "}\n");
     fclose(file);
-    free(jsonStr);
-    cJSON_Delete(json);
+    
+
 }
 
 Deck* loadDeckFromFile(const char* filename, cJSON* user_context){
-    FILE* file = fopen(filename, "r");
-    fseek(file, 0, SEEK_END);
-    long fileSize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    char* jsonStr = malloc(fileSize + 1);
-    fread(jsonStr, 1, fileSize, file);
-    fclose(file);
-    cJSON* json = cJSON_Parse(jsonStr);
-    cJSON* cards = cJSON_GetObjectItem(json, "cards");
-    cJSON* deckName = cJSON_GetObjectItem(json, "label");
-    cJSON* card = cards -> child;
-    Deck* auxDeck = createDeck(deckName -> valuestring, user_context);
+    if (access(filename, F_OK) != -1){
+        FILE* file = fopen(filename, "r");
+        fseek(file, 0, SEEK_END);
+        long fileSize = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        char* jsonStr = malloc(fileSize + 1);
+        fread(jsonStr, 1, fileSize, file);
+        fclose(file);
+        cJSON* json = cJSON_Parse(jsonStr);
+        cJSON* cards = cJSON_GetObjectItem(json, "cards");
+        cJSON* deckName = cJSON_GetObjectItem(json, "label");
+        cJSON* card = cards -> child;
+        Deck* auxDeck = createDeck(deckName -> valuestring, user_context);
+        
+    } else {
+        printf("Deck não encontrado...\n");
+    }
 }
