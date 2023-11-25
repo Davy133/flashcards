@@ -143,7 +143,6 @@ void actionManage(){
 int main(void)
 {
     cJSON* userdata = NULL;
-    
     userdata = initializeUserDataBus();
     struct MenuItem mainMenuItems[] = {
         {1, "Manage Decks", actionManage},

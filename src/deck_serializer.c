@@ -58,7 +58,7 @@ void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position
 
 }
 
-Deck* loadDeckFromFile(const char* filename, cJSON* user_context){
+void loadDeckFromFile(const char* filename, cJSON* user_context){
     if (access(filename, F_OK) != -1){
         FILE* file = fopen(filename, "r");
         fseek(file, 0, SEEK_END);
@@ -71,7 +71,7 @@ Deck* loadDeckFromFile(const char* filename, cJSON* user_context){
         cJSON* cards = cJSON_GetObjectItem(json, "cards");
         cJSON* deckName = cJSON_GetObjectItem(json, "label");
         cJSON* card = cards -> child;
-        Deck* auxDeck = createDeck(deckName -> valuestring, user_context);
+        createDeck(deckName -> valuestring, user_context);
         
     } else {
         printf("Deck não encontrado...\n");

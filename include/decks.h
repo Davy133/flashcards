@@ -1,9 +1,6 @@
 #pragma once
-#include "cJSON.h"
+#include "common.h"
 #include "deck_serializer.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "cards.h"
 
 typedef struct Deck {
@@ -19,8 +16,8 @@ typedef struct Decks {
 } Decks;
 
 Decks* startDecks();
-Deck* createDeck(char* deckName, cJSON* user_context);
 
+void createDeck(char* deckName, cJSON* user_context);
 void deleteDeck(int position, cJSON* user_context);
 void viewDecks(cJSON* user_context);
 void viewDeck(cJSON* user_context, int position);
@@ -30,4 +27,9 @@ void addFlashcardToDeck(cJSON* user_context, int deck_position, Flashcard* card)
 void removeFlashcardFromDeck(cJSON* user_context, int deck_position, int flashcard_position);
 void updateFlashcardFromDeck(cJSON* user_context, int deck_position, int flashcard_position, const char* newFront, const char* newBack);
 void viewFlashcardsFromDeck(cJSON* user_context, int deck_position);
+
+void enqueueCard(Deck* deck, Flashcard* card);
+Flashcard* dequeueCard(Deck* deck); 
+
+void sortDeck(Deck* deck);
 void studyDeck(Deck* deck);

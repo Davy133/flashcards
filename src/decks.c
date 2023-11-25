@@ -1,7 +1,6 @@
 #include <decks.h>
 #include <user_data_bus.h>
 
-//Is this really necessary?
 Decks* startDecks(){
     Decks* decks = (Decks*) malloc(sizeof(Decks));
     if (decks != NULL){
@@ -13,24 +12,16 @@ Decks* startDecks(){
     return decks;
 }
 
-Deck* createDeck(char* deckName, cJSON* user_context){
-    Deck* newDeck = (Deck*) malloc(sizeof(Deck));
+void createDeck(char* deckName, cJSON* user_context){
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = cJSON_CreateObject();
     cJSON_AddItemToArray(decks, deck);
-    if (newDeck != NULL){
-        newDeck -> label = deckName;
-        newDeck -> first = NULL;
-        newDeck -> last = NULL;
-        newDeck -> next = NULL;
-        cJSON* jsonDeck = deckToJson(newDeck);
-        cJSON_AddItemToObject(deck, "deck", jsonDeck);
-        saveUserData(user_context);
-        *user_context = *initializeUserDataBus();
-    } else {
-        printf("Falha na criação de um novo deck...\n");
-    }
-    return newDeck;
+    cJSON_AddItemToObject(deck, "deck", cJSON_CreateObject());
+    cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON_AddItemToObject(jsonDeck, "label", cJSON_CreateString(deckName));
+    cJSON_AddItemToObject(jsonDeck, "cards", cJSON_CreateArray());
+    saveUserData(user_context);
+    *user_context = *initializeUserDataBus();
 }
 
 void deleteDeck(int position, cJSON* user_context){
@@ -95,7 +86,6 @@ void addFlashcardToDeck(cJSON* user_context, int deck_position, Flashcard* card)
     cJSON_AddItemToObject(cardJson, "back", cJSON_CreateString(card -> back));
     saveUserData(user_context);
     *user_context = *initializeUserDataBus();
-
 }
 
 void removeFlashcardFromDeck(cJSON* user_context, int deck_position, int flashcard_position){
