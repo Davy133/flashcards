@@ -128,7 +128,6 @@ void updateFlashcardFromDeck(cJSON* user_context, int deck_position, int flashca
     back -> valuestring = strdup(newBack);
     saveUserData(user_context);
     *user_context = *initializeUserDataBus();
-
 }
 
 void studyDeck(Deck* deck){

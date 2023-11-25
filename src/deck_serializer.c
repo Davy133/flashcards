@@ -16,18 +16,6 @@ cJSON* deckToJson(Deck* deck){
     return json;
 }
 
-// Deck* deckFromJson(cJSON* json, cJSON* user_context){
-//     cJSON* label = cJSON_GetObjectItem(json, "label");
-//     Deck* deck = createDeck(label -> valuestring, user_context);
-//     cJSON* cards = cJSON_GetObjectItem(json, "cards");
-//     cJSON* card = cards -> child;
-//     while (card != NULL){
-//         addFlashcardToDeck(deck, createFlashcard(card -> valuestring, card -> valuestring));
-//         card = card -> next;
-//     }
-//     return deck;
-// }
-
 void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position){
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
@@ -35,7 +23,7 @@ void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position
     cJSON* label = cJSON_GetObjectItemCaseSensitive(jsonDeck, "label");
     cJSON* cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
     cJSON* card = cards -> child;
-    char jsonFilename[strlen(filename) + 5]; // 5 is the length of ".json" plus null terminator
+    char jsonFilename[strlen(filename) + 5];
     strcpy(jsonFilename, filename);
     strcat(jsonFilename, ".json");
     FILE* file = fopen(jsonFilename, "w");
