@@ -45,7 +45,7 @@ void viewDecks(cJSON* user_context);
 void viewDeck(cJSON* user_context, int position);
 void updateDeck(cJSON* user_context, int position, const char* newLabel);
 
-void addFlashcardToDeck(cJSON* user_context, int deck_position, Flashcard* card);
+void addFlashcardToDeck(cJSON* user_context, int deck_position, char* front, char* back);
 void removeFlashcardFromDeck(cJSON* user_context, int deck_position, int flashcard_position);
 void updateFlashcardFromDeck(cJSON* user_context, int deck_position, int flashcard_position, const char* newFront, const char* newBack);
 void viewFlashcardsFromDeck(cJSON* user_context, int deck_position);

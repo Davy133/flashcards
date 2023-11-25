@@ -61,15 +61,14 @@ void actionCreateFlashcard(cJSON* user_context, int deck_position){
     scanf("%s", front);
     printf("Enter the back of the flashcard: ");
     scanf("%s", back);
-    Flashcard* card = createFlashcard(front, back);
-    addFlashcardToDeck(user_context, deck_position, card);
+    addFlashcardToDeck(user_context, deck_position, front, back);
 }
 
 void actionDeleteFlashcard(cJSON* user_context, int deck_position){
     int flashcard_position;
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
-    removeFlashcardFromDeck(user_context, deck_position, flashcard_position); 
+    removeFlashcardFromDeck(user_context, deck_position, flashcard_position);
 }
 
 void actionViewFlashcards(cJSON* user_context, int deck_position){

@@ -97,15 +97,15 @@ void updateDeck(cJSON* user_context, int position, const char* newLabel){
     }
 }
 
-void addFlashcardToDeck(cJSON* user_context, int deck_position, Flashcard* card){
+void addFlashcardToDeck(cJSON* user_context, int deck_position, char* front, char* back){
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
     cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
     cJSON* cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
     cJSON* cardJson = cJSON_CreateObject();
     cJSON_AddItemToArray(cards, cardJson);
-    cJSON_AddItemToObject(cardJson, "front", cJSON_CreateString(card -> front));
-    cJSON_AddItemToObject(cardJson, "back", cJSON_CreateString(card -> back));
+    cJSON_AddItemToObject(cardJson, "front", cJSON_CreateString(front));
+    cJSON_AddItemToObject(cardJson, "back", cJSON_CreateString(back));
     saveUserData(user_context);
     *user_context = *initializeUserDataBus();
 }
