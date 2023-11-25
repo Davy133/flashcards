@@ -7,8 +7,9 @@ set(SOURCES
     src/menu_handler.c
     src/cards.c
     src/decks.c
-    src/cJSON.c
     src/user_data_bus.c
+    libs/cJSON/cJSON.c
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} PUBLIC libs/cJSON)
