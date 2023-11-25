@@ -23,7 +23,6 @@ SOFTWARE.
 #include "menu_handler.h"
 #include "cards.h"
 #include "decks.h"
-#include "cJSON.h"
 #include "deck_serializer.h"
 #include "user_data_bus.h"
 
