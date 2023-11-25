@@ -29,7 +29,7 @@ Decks* startDecks(){
         decks -> first = NULL;
         decks -> last = NULL;
     } else {
-        printf("Falha na inicialização...\n");
+        printf("Initialization failed.\n");
     }
     return decks;
 }
@@ -157,10 +157,10 @@ void studyDeck(Deck* deck){
     if (deck -> first != NULL){
         while (auxCard != NULL){
             printf("%s\n", auxCard -> front);
-            printf("Pressione enter para ver a resposta...\n");
+            printf("Press enter to see the back.\n");
             getchar();
             printf("%s\n", auxCard -> back);
-            printf("Pressione enter para continuar...\n");
+            printf("Press enter to continue.\n");
             getchar();
             auxCard = auxCard -> next;
         }
