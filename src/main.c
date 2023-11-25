@@ -55,44 +55,32 @@ void actionUpdateDeck(cJSON* user_context){
     updateDeck(user_context, position, newLabel);
 }
 
-void actionCreateFlashcard(cJSON* user_context){
+void actionCreateFlashcard(cJSON* user_context, int deck_position){
     char front[256];
     char back[256];
-    int deck_position;
     printf("Enter the front of the flashcard: ");
     scanf("%s", front);
     printf("Enter the back of the flashcard: ");
     scanf("%s", back);
-    printf("Enter the position of the deck: ");
-    scanf("%d", &deck_position);
     Flashcard* card = createFlashcard(front, back);
     addFlashcardToDeck(user_context, deck_position, card);
 }
 
-void actionDeleteFlashcard(cJSON* user_context){
-    int deck_position;
+void actionDeleteFlashcard(cJSON* user_context, int deck_position){
     int flashcard_position;
-    printf("Enter the position of the deck: ");
-    scanf("%d", &deck_position);
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
     removeFlashcardFromDeck(user_context, deck_position, flashcard_position); 
 }
 
-void actionViewFlashcards(cJSON* user_context){
-    int deck_position;
-    printf("Enter the position of the deck: ");
-    scanf("%d", &deck_position);
+void actionViewFlashcards(cJSON* user_context, int deck_position){
     viewFlashcardsFromDeck(user_context, deck_position);
 }
 
-void actionUpdateFlashcard(cJSON* user_context){
-    int deck_position;
+void actionUpdateFlashcard(cJSON* user_context, int deck_position){
     int flashcard_position;
     char newFront[256];
     char newBack[256];
-    printf("Enter the position of the deck: ");
-    scanf("%d", &deck_position);
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
     printf("Enter the new front of the flashcard: ");
@@ -119,22 +107,55 @@ void actionLoadDecksFromFile(cJSON* user_context){
     loadDeckFromFile(filename, user_context);
 }
 
+void actionManageDeck(cJSON* user_context){
+    int deck_position;
+    printf("Enter the position of the deck: ");
+    scanf("%d", &deck_position);
+
+    struct MenuItem manageDeckMenuItems[] = {
+        {1, "Create Flashcard", actionCreateFlashcard},
+        {2, "Delete Flashcard", actionDeleteFlashcard},
+        {3, "Update Flashcard", actionUpdateFlashcard},
+        {4, "Back", NULL},
+    };
+
+    struct Menu manageDeckMenu = {
+        "Manage Deck",
+        manageDeckMenuItems,
+        sizeof(manageDeckMenuItems) / sizeof(manageDeckMenuItems[0])
+    };
+
+    int choice;
+
+    do {
+        actionViewFlashcards(user_context, deck_position);
+        displayMenu(&manageDeckMenu);
+        choice = handleMenuInput(&manageDeckMenu);
+
+        system("clear || cls");
+        if (choice >= 1 && choice <= manageDeckMenu.numItems) {
+            if (manageDeckMenu.items[choice - 1].action != NULL) {
+                manageDeckMenu.items[choice - 1].action(user_context, deck_position);
+            }
+        } else {
+            printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != manageDeckMenu.numItems);
+}
+
 void actionManage(){
     cJSON* userdata = NULL;
     userdata = initializeUserDataBus();
     Decks* currentDecks = startDecks();
+    
     struct MenuItem manageMenuItems[] = {
         {1, "Create Deck", actionCreateDeck},
         {2, "Delete Deck", actionDeleteDeck},
-        {3, "View Decks", actionViewDecks},
-        {4, "Update Deck", actionUpdateDeck},
-        {5, "Create Flashcard", actionCreateFlashcard},
-        {6, "Delete Flashcard", actionDeleteFlashcard},
-        {7, "View Flashcards", actionViewFlashcards},
-        {8, "Update Flashcard", actionUpdateFlashcard},
-        {9, "Save Decks to File", actionSaveDecksToFile},
-        {10, "Load Decks from File", actionLoadDecksFromFile},
-        {11, "Back", NULL},
+        {3, "Update Deck", actionUpdateDeck},
+        {4, "Manage Deck", actionManageDeck},
+        {5, "Save Decks to File", actionSaveDecksToFile},
+        {6, "Load Decks from File", actionLoadDecksFromFile},
+        {7, "Back", NULL},
     };
 
     struct Menu manageMenu = {
@@ -146,23 +167,25 @@ void actionManage(){
     int choice;
 
     do {
+        actionViewDecks(userdata);
         displayMenu(&manageMenu);
         choice = handleMenuInput(&manageMenu);
 
+        system("clear || cls");
         if (choice >= 1 && choice <= manageMenu.numItems) {
             if (manageMenu.items[choice - 1].action != NULL) {
                 manageMenu.items[choice - 1].action(userdata);
-            } else {
-                printf("Goodbye!\n");
             }
         } else {
             printf("Invalid choice. Please try again.\n");
         }
     } while (choice != manageMenu.numItems);
+    system("clear || cls");
 }
 
 int main(void)
 {
+    system("clear || cls");
     cJSON* userdata = NULL;
     userdata = initializeUserDataBus();
     struct MenuItem mainMenuItems[] = {
@@ -181,7 +204,8 @@ int main(void)
     do {
         displayMenu(&mainMenu);
         choice = handleMenuInput(&mainMenu);
-
+        
+        system("clear || cls");
         if (choice >= 1 && choice <= mainMenu.numItems) {
             if (mainMenu.items[choice - 1].action != NULL) {
                 mainMenu.items[choice - 1].action(userdata);
