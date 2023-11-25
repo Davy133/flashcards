@@ -34,7 +34,7 @@ cJSON* initializeUserDataBus() {
             fclose(file);
             cJSON* root = cJSON_Parse(json_data);
             free(json_data);
-            printf("[DATABUS] userdata.json loaded.\n");
+            //printf("[DATABUS] userdata.json loaded.\n");
             return root;
         } else {
             printf("Failed to load userdata.json.\n");
@@ -48,7 +48,7 @@ cJSON* initializeUserDataBus() {
         if (file != NULL) {
             fputs(json_data, file);
             fclose(file);
-            printf("[DATABUS] userdata.json created.\n");
+            //printf("[DATABUS] userdata.json created.\n");
             return root;
         } else {
             printf("Failed to create userdata.json.\n");
@@ -64,7 +64,7 @@ void saveUserData(cJSON* root) {
     if (file != NULL) {
         fputs(json_data, file);
         fclose(file);
-        printf("[DATABUS] userdata.json saved.\n");
+        //printf("[DATABUS] userdata.json saved.\n");
     } else {
         printf("Failed to save userdata.json.\n");
     }

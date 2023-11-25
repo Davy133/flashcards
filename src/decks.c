@@ -55,7 +55,7 @@ void deleteDeck(int position, cJSON* user_context){
         saveUserData(user_context);
         *user_context = *initializeUserDataBus();
     } else {
-        printf("Posição inválida...\n");
+        printf("Invalid position.\n");
     }
 }
 
@@ -93,7 +93,7 @@ void updateDeck(cJSON* user_context, int position, const char* newLabel){
         saveUserData(user_context);
         *user_context = *initializeUserDataBus();
     } else {
-        printf("Posição inválida...\n");
+        printf("Invalid position.\n");
     }
 }
 
@@ -165,6 +165,6 @@ void studyDeck(Deck* deck){
             auxCard = auxCard -> next;
         }
     } else {
-        printf("Sua lista de flashcards está vazia...\n");
+        printf("Your flashcard list is empty.\n");
     }
 }

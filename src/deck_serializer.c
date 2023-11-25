@@ -80,6 +80,6 @@ void loadDeckFromFile(const char* filename, cJSON* user_context){
         createDeck(deckName -> valuestring, user_context);
         
     } else {
-        printf("Deck não encontrado...\n");
+        printf("Deck not found.\n");
     }
 }
