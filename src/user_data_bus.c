@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdbool.h>
 #include "user_data_bus.h"
-#include "cJSON.h"
 
 cJSON* initializeUserDataBus() {
     if (access("userdata.json", F_OK) != -1) {

@@ -1,6 +1,4 @@
 #include "deck_serializer.h"
-#include <stdio.h>
-#include <unistd.h>
 
 cJSON* deckToJson(Deck* deck){
     cJSON* json = cJSON_CreateObject();
@@ -54,8 +52,6 @@ void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position
     fprintf(file, "\t]\n");
     fprintf(file, "}\n");
     fclose(file);
-    
-
 }
 
 void loadDeckFromFile(const char* filename, cJSON* user_context){

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "menu_handler.h"
 #include "cards.h"
 #include "decks.h"
