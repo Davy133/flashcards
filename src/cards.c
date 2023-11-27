@@ -49,3 +49,24 @@ const char* getFlashcardfront(const Flashcard* card) {
 const char* getFlashcardback(const Flashcard* card) {
     return card->back;
 }
+
+void calculateSuperMemo2(Flashcard* card, int quality){
+    SuperMemo2* sm2_Aux = card -> sm2;
+    if (quality >= 3){
+        if (sm2_Aux -> repetitions == 0) {
+            sm2_Aux -> interval = 1;
+        } else if (sm2_Aux -> repetitions == 1){
+            sm2_Aux -> interval = 6;
+        } else {
+            sm2_Aux -> interval = round((sm2_Aux -> interval) * (sm2_Aux -> easeFactor));
+        }
+        sm2_Aux -> repetitions++;
+    } else {
+        sm2_Aux -> repetitions = 0;
+        sm2_Aux -> interval = 1;
+    }
+    sm2_Aux -> easeFactor = (sm2_Aux -> easeFactor) + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+    if (sm2_Aux -> easeFactor < 1.3){
+        sm2_Aux -> easeFactor = 1.3;
+    }
+}
