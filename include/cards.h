@@ -23,9 +23,16 @@ SOFTWARE.
 #pragma once
 #include "common.h"
 
+typedef struct SuperMemo2 {
+    int interval;
+    int repetitions;
+    float easeFactor;
+}SuperMemo2;
+
 typedef struct Flashcard {
     char* front;
     char* back;
+    SuperMemo2* sm2; 
     struct Flashcard* next;
 } Flashcard;
 
@@ -33,3 +40,5 @@ Flashcard* createFlashcard(const char* front, const char* back);
 void deleteFlashcard(Flashcard* card);
 void updateFlashcard(Flashcard* card, const char* front, const char* back);
 const char* getFlashcardFront(const Flashcard* card);
+
+void calculateSuperMemo2(Flashcard* card, int quality);
