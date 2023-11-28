@@ -13,3 +13,5 @@ set(SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_include_directories(${PROJECT_NAME} PUBLIC libs/cJSON)
+target_link_libraries(${PROJECT_NAME} PUBLIC m)
+target_link_libraries(${PROJECT_NAME} PUBLIC uuid)

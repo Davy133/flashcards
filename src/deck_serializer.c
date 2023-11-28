@@ -22,50 +22,64 @@ SOFTWARE.
 
 #include "deck_serializer.h"
 
-cJSON* deckToJson(Deck* deck){
-    cJSON* json = cJSON_CreateObject();
-    cJSON* cards = cJSON_CreateArray();
-    cJSON_AddItemToObject(json, "label", cJSON_CreateString(deck -> label));
-    cJSON_AddItemToObject(json, "cards", cards);
-    Flashcard* auxCard = deck -> first;
-    while (auxCard != NULL){
-        cJSON* card = cJSON_CreateObject();
-        cJSON_AddItemToObject(card, "front", cJSON_CreateString(auxCard -> front));
-        cJSON_AddItemToObject(card, "back", cJSON_CreateString(auxCard -> back));
-        cJSON_AddItemToArray(cards, card);
-        auxCard = auxCard -> next;
-    }
-    return json;
-}
+// cJSON* deckToJson(Deck* deck){
+//     cJSON* json = cJSON_CreateObject();
+//     cJSON* cards = cJSON_CreateArray();
+//     cJSON_AddItemToObject(json, "label", cJSON_CreateString(deck -> label));
+//     cJSON_AddItemToObject(json, "cards", cards);
+//     Flashcard* auxCard = deck -> first;
+//     while (auxCard != NULL){
+//         cJSON* card = cJSON_CreateObject();
+//         cJSON_AddItemToObject(card, "front", cJSON_CreateString(auxCard -> front));
+//         cJSON_AddItemToObject(card, "back", cJSON_CreateString(auxCard -> back));
+//         cJSON_AddItemToObject(card, "dueDate", cJSON_CreateNumber(auxCard -> dueDate));
+//         cJSON_AddItemToObject(card, "sm2", cJSON_CreateObject());
+//         cJSON* sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
+//         cJSON_AddItemToObject(sm2, "interval", cJSON_CreateNumber(auxCard -> sm2 -> interval));
+//         cJSON_AddItemToObject(sm2, "repetitions", cJSON_CreateNumber(auxCard -> sm2 -> repetitions));
+//         cJSON_AddItemToObject(sm2, "easeFactor", cJSON_CreateNumber(auxCard -> sm2 -> easeFactor));
+//         cJSON_AddItemToArray(cards, card);
+//         auxCard = auxCard -> next;
+//     }
+//     return json;
+// }
 
-void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position){
-    cJSON* decks = cJSON_GetObjectItem(user_context, "decks");
-    cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
-    char* jsonStr = cJSON_Print(deck);
-    FILE* file = fopen(filename, "w");
-    if (file != NULL){
+void saveDeckToFile(cJSON *user_context, const char *filename, int deck_position)
+{
+    cJSON *decks = cJSON_GetObjectItem(user_context, "decks");
+    cJSON *deck = cJSON_GetArrayItem(decks, deck_position);
+    char *jsonStr = cJSON_Print(deck);
+    FILE *file = fopen(filename, "w");
+    if (file != NULL)
+    {
         fputs(jsonStr, file);
         fclose(file);
-    } else {
+    }
+    else
+    {
         printf("Failed to save deck.\n");
     }
     free(jsonStr);
 }
 
-void loadDeckFromFile(const char* filename, cJSON* user_context){
-    FILE* file = fopen(filename, "r");
-    if (file != NULL){
+void loadDeckFromFile(const char *filename, cJSON *user_context)
+{
+    FILE *file = fopen(filename, "r");
+    if (file != NULL)
+    {
         fseek(file, 0, SEEK_END);
         long file_size = ftell(file);
         fseek(file, 0, SEEK_SET);
-        char* json_data = malloc(file_size + 1);
+        char *json_data = malloc(file_size + 1);
         fread(json_data, 1, file_size, file);
         fclose(file);
-        cJSON* deck = cJSON_Parse(json_data);
+        cJSON *deck = cJSON_Parse(json_data);
         free(json_data);
-        cJSON* decks = cJSON_GetObjectItem(user_context, "decks");
+        cJSON *decks = cJSON_GetObjectItem(user_context, "decks");
         cJSON_AddItemToArray(decks, deck);
-    } else {
+    }
+    else
+    {
         printf("Failed to load deck.\n");
     }
 }

@@ -26,25 +26,29 @@ SOFTWARE.
 #include "deck_serializer.h"
 #include "user_data_bus.h"
 
-void actionCreateDeck(cJSON* user_context){
+void actionCreateDeck(cJSON *user_context)
+{
     char deckName[256];
     printf("Enter the name of the deck: ");
     scanf("%s", deckName);
     createDeck(deckName, user_context);
 }
 
-void actionDeleteDeck(cJSON* user_context){
+void actionDeleteDeck(cJSON *user_context)
+{
     int position;
     printf("Enter the position of the deck: ");
     scanf("%d", &position);
     deleteDeck(position, user_context);
 }
 
-void actionViewDecks(cJSON* user_context){
+void actionViewDecks(cJSON *user_context)
+{
     viewDecks(user_context);
 }
 
-void actionUpdateDeck(cJSON* user_context){
+void actionUpdateDeck(cJSON *user_context)
+{
     int position;
     char newLabel[256];
     printf("Enter the position of the deck: ");
@@ -54,7 +58,8 @@ void actionUpdateDeck(cJSON* user_context){
     updateDeck(user_context, position, newLabel);
 }
 
-void actionCreateFlashcard(cJSON* user_context, int deck_position){
+void actionCreateFlashcard(cJSON *user_context, int deck_position)
+{
     char front[256];
     char back[256];
     printf("Enter the front of the flashcard: ");
@@ -64,18 +69,21 @@ void actionCreateFlashcard(cJSON* user_context, int deck_position){
     addFlashcardToDeck(user_context, deck_position, front, back);
 }
 
-void actionDeleteFlashcard(cJSON* user_context, int deck_position){
+void actionDeleteFlashcard(cJSON *user_context, int deck_position)
+{
     int flashcard_position;
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
     removeFlashcardFromDeck(user_context, deck_position, flashcard_position);
 }
 
-void actionViewFlashcards(cJSON* user_context, int deck_position){
+void actionViewFlashcards(cJSON *user_context, int deck_position)
+{
     viewFlashcardsFromDeck(user_context, deck_position);
 }
 
-void actionUpdateFlashcard(cJSON* user_context, int deck_position){
+void actionUpdateFlashcard(cJSON *user_context, int deck_position)
+{
     int flashcard_position;
     char newFront[256];
     char newBack[256];
@@ -88,7 +96,8 @@ void actionUpdateFlashcard(cJSON* user_context, int deck_position){
     updateFlashcardFromDeck(user_context, deck_position, flashcard_position, newFront, newBack);
 }
 
-void actionSaveDecksToFile(cJSON* user_context){
+void actionSaveDecksToFile(cJSON *user_context)
+{
     char filename[256];
     printf("Enter the name of the file: ");
     scanf("%s", filename);
@@ -98,14 +107,16 @@ void actionSaveDecksToFile(cJSON* user_context){
     saveDeckToFile(user_context, filename, deck_position);
 }
 
-void actionLoadDecksFromFile(cJSON* user_context){
+void actionLoadDecksFromFile(cJSON *user_context)
+{
     char filename[256];
     printf("Enter the name of the file: ");
     scanf("%s", filename);
     loadDeckFromFile(filename, user_context);
 }
 
-void actionManageDeck(cJSON* user_context){
+void actionManageDeck(cJSON *user_context)
+{
     int deck_position;
     printf("Enter the position of the deck: ");
     scanf("%d", &deck_position);
@@ -120,32 +131,153 @@ void actionManageDeck(cJSON* user_context){
     struct Menu manageDeckMenu = {
         "Manage Deck",
         manageDeckMenuItems,
-        sizeof(manageDeckMenuItems) / sizeof(manageDeckMenuItems[0])
-    };
+        sizeof(manageDeckMenuItems) / sizeof(manageDeckMenuItems[0])};
 
     int choice;
 
-    do {
+    do
+    {
         actionViewFlashcards(user_context, deck_position);
         displayMenu(&manageDeckMenu);
         choice = handleMenuInput(&manageDeckMenu);
 
         system("clear || cls");
-        if (choice >= 1 && choice <= manageDeckMenu.numItems) {
-            if (manageDeckMenu.items[choice - 1].action != NULL) {
+        if (choice >= 1 && choice <= manageDeckMenu.numItems)
+        {
+            if (manageDeckMenu.items[choice - 1].action != NULL)
+            {
                 manageDeckMenu.items[choice - 1].action(user_context, deck_position);
             }
-        } else {
+        }
+        else
+        {
             printf("Invalid choice. Please try again.\n");
         }
     } while (choice != manageDeckMenu.numItems);
 }
 
-void actionManage(){
-    cJSON* userdata = NULL;
+void actionStudy()
+{
+    cJSON *userdata = NULL;
     userdata = initializeUserDataBus();
-    Decks* currentDecks = startDecks();
-    
+    Deck *currentDeck = startDeck();
+    int deck_position;
+    printf("Enter the position of the deck: ");
+    scanf("%d", &deck_position);
+    cJSON *decks = cJSON_GetObjectItemCaseSensitive(userdata, "decks");
+    cJSON *deck = cJSON_GetArrayItem(decks, deck_position);
+    cJSON *jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON *cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
+    cJSON *card = NULL;
+    cJSON_ArrayForEach(card, cards)
+    {
+        cJSON *front = cJSON_GetObjectItemCaseSensitive(card, "front");
+        cJSON *back = cJSON_GetObjectItemCaseSensitive(card, "back");
+        cJSON *dueDate = cJSON_GetObjectItemCaseSensitive(card, "dueDate");
+        cJSON *sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
+        cJSON *interval = cJSON_GetObjectItemCaseSensitive(sm2, "interval");
+        cJSON *repetitions = cJSON_GetObjectItemCaseSensitive(sm2, "repetitions");
+        cJSON *easeFactor = cJSON_GetObjectItemCaseSensitive(sm2, "easeFactor");
+        cJSON *uuid = cJSON_GetObjectItemCaseSensitive(card, "UUID");
+        SuperMemo2 sm2_struct = {
+            interval->valueint,
+            repetitions->valueint,
+            easeFactor->valuedouble,
+        };
+        if (dueDate->valueint <= time(NULL))
+        {
+            Flashcard *currentCard = createFlashcard(front->valuestring, back->valuestring, uuid->valuestring, sm2_struct);
+            enqueueCard(currentDeck, currentCard);
+        }
+    }
+    if (!isEmpty(currentDeck))
+    {
+        Flashcard *studyingCard;
+        while (!isEmpty(currentDeck))
+        {
+            int rating;
+            studyingCard = dequeueCard(currentDeck);
+            printf("Front: %s\n", studyingCard->front);
+            printf("Press any key to reveal the back of the card.\n");
+            getchar();
+            getchar();
+            printf("Back: %s\n", studyingCard->back);
+            printf("How well did you know this card?\n");
+            printf("1 - I didn't know it at all\n");
+            printf("2 - I knew it, but I had to think about it\n");
+            printf("3 - I knew it, but I had to think about it a little\n");
+            printf("4 - I knew it, but it took me a while to remember\n");
+            printf("5 - I knew it instantly\n");
+            scanf("%d", &rating);
+            while (rating < 1 || rating > 5)
+            {
+                printf("Invalid rating. Please try again.\n");
+                scanf("%d", &rating);
+            }
+            calculateSuperMemo2(studyingCard, rating);
+            studyingCard->dueDate = time(NULL) + studyingCard->sm2->interval * 86400;
+            if (studyingCard->dueDate < time(NULL))
+            {
+                enqueueCard(currentDeck, studyingCard);
+            }
+            else
+            {
+                system("clear || cls");
+                printf("You'll see this card again in %d day(s).\n", studyingCard->sm2->interval);
+                userdata = initializeUserDataBus();
+                decks = cJSON_GetObjectItemCaseSensitive(userdata, "decks");
+                deck = cJSON_GetArrayItem(decks, deck_position);
+                jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+                cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
+                card = NULL;
+                cJSON_ArrayForEach(card, cards)
+                {
+                    cJSON *uuid = cJSON_GetObjectItemCaseSensitive(card, "UUID");
+                    if (strcmp(uuid->valuestring, studyingCard->UUID) == 0)
+                    {
+                        cJSON *dueDate = cJSON_GetObjectItemCaseSensitive(card, "dueDate");
+                        cJSON *sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
+                        cJSON *interval = cJSON_GetObjectItemCaseSensitive(sm2, "interval");
+                        cJSON *repetitions = cJSON_GetObjectItemCaseSensitive(sm2, "repetitions");
+                        cJSON *easeFactor = cJSON_GetObjectItemCaseSensitive(sm2, "easeFactor");
+                        dueDate->valueint = studyingCard->dueDate;
+                        interval->valueint = studyingCard->sm2->interval;
+                        repetitions->valueint = studyingCard->sm2->repetitions;
+                        easeFactor->valuedouble = studyingCard->sm2->easeFactor;
+                        if (strcmp(uuid->valuestring, studyingCard->UUID) == 0)
+                        {
+                            cJSON *dueDate = cJSON_GetObjectItemCaseSensitive(card, "dueDate");
+                            cJSON *sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
+                            cJSON *interval = cJSON_GetObjectItemCaseSensitive(sm2, "interval");
+                            cJSON *repetitions = cJSON_GetObjectItemCaseSensitive(sm2, "repetitions");
+                            cJSON *easeFactor = cJSON_GetObjectItemCaseSensitive(sm2, "easeFactor");
+                            cJSON_SetNumberValue(dueDate, studyingCard->dueDate);
+                            cJSON_SetNumberValue(interval, studyingCard->sm2->interval);
+                            cJSON_SetNumberValue(repetitions, studyingCard->sm2->repetitions);
+                            easeFactor->valuedouble = studyingCard->sm2->easeFactor;
+
+                            saveUserData(userdata);
+                            *userdata = *initializeUserDataBus();
+                        }
+                        saveUserData(userdata);
+                        *userdata = *initializeUserDataBus();
+                    }
+                }
+            }
+        }
+        printf("Congrats, you've finished this deck for now!\n");
+    }
+    else
+    {
+        printf("There are no cards to study in this deck.\n");
+    }
+}
+
+void actionManage()
+{
+    cJSON *userdata = NULL;
+    userdata = initializeUserDataBus();
+
     struct MenuItem manageMenuItems[] = {
         {1, "Create Deck", actionCreateDeck},
         {2, "Delete Deck", actionDeleteDeck},
@@ -159,22 +291,26 @@ void actionManage(){
     struct Menu manageMenu = {
         "Manage Decks",
         manageMenuItems,
-        sizeof(manageMenuItems) / sizeof(manageMenuItems[0])
-    };
+        sizeof(manageMenuItems) / sizeof(manageMenuItems[0])};
 
     int choice;
 
-    do {
+    do
+    {
         actionViewDecks(userdata);
         displayMenu(&manageMenu);
         choice = handleMenuInput(&manageMenu);
 
         system("clear || cls");
-        if (choice >= 1 && choice <= manageMenu.numItems) {
-            if (manageMenu.items[choice - 1].action != NULL) {
+        if (choice >= 1 && choice <= manageMenu.numItems)
+        {
+            if (manageMenu.items[choice - 1].action != NULL)
+            {
                 manageMenu.items[choice - 1].action(userdata);
             }
-        } else {
+        }
+        else
+        {
             printf("Invalid choice. Please try again.\n");
         }
     } while (choice != manageMenu.numItems);
@@ -184,33 +320,40 @@ void actionManage(){
 int main(void)
 {
     system("clear || cls");
-    cJSON* userdata = NULL;
+    cJSON *userdata = NULL;
     userdata = initializeUserDataBus();
     struct MenuItem mainMenuItems[] = {
-        {1, "Manage Decks", actionManage},
-        {2, "Quit", NULL},
+        {1, "Study Deck", actionStudy},
+        {2, "Manage Decks", actionManage},
+        {3, "Quit", NULL},
     };
 
     struct Menu mainMenu = {
         "Flashcard App Main Menu",
         mainMenuItems,
-        sizeof(mainMenuItems) / sizeof(mainMenuItems[0])
-    };
+        sizeof(mainMenuItems) / sizeof(mainMenuItems[0])};
 
     int choice;
 
-    do {
+    do
+    {
         displayMenu(&mainMenu);
         choice = handleMenuInput(&mainMenu);
-        
+
         system("clear || cls");
-        if (choice >= 1 && choice <= mainMenu.numItems) {
-            if (mainMenu.items[choice - 1].action != NULL) {
+        if (choice >= 1 && choice <= mainMenu.numItems)
+        {
+            if (mainMenu.items[choice - 1].action != NULL)
+            {
                 mainMenu.items[choice - 1].action(userdata);
-            } else {
+            }
+            else
+            {
                 printf("Goodbye!\n");
             }
-        } else {
+        }
+        else
+        {
             printf("Invalid choice. Please try again.\n");
         }
     } while (choice != mainMenu.numItems);

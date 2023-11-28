@@ -20,21 +20,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once 
+#pragma once
 #include "common.h"
 
-struct MenuItem {
+struct MenuItem
+{
     int id;
-    const char* label;
+    const char *label;
     void (*action)();
 };
 
-struct Menu {
-    const char* title;
-    struct MenuItem* items;
+struct Menu
+{
+    const char *title;
+    struct MenuItem *items;
     int numItems;
 };
 
-void displayMenu(const struct Menu* menu);
+void displayMenu(const struct Menu *menu);
 
-int handleMenuInput(const struct Menu* menu);
+int handleMenuInput(const struct Menu *menu);
