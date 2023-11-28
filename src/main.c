@@ -53,7 +53,8 @@ void actionUpdateDeck(cJSON *user_context)
     char newLabel[256];
     printf("Enter the position of the deck: ");
     scanf("%d", &position);
-    if(position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+    if (position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks")))
+    {
         printf("Invalid deck position.\n");
         return;
     }
@@ -78,16 +79,28 @@ void actionDeleteFlashcard(cJSON *user_context, int deck_position)
     int flashcard_position;
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
-    if(flashcard_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+    if (deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks")))
+    {
+        printf("Invalid deck position.\n");
+        return;
+    }
+    cJSON *decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
+    cJSON *deck = cJSON_GetArrayItem(decks, deck_position);
+    cJSON *jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON *cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
+    if (flashcard_position >= cJSON_GetArraySize(cards))
+    {
         printf("Invalid flashcard position.\n");
         return;
     }
+
     removeFlashcardFromDeck(user_context, deck_position, flashcard_position);
 }
 
 void actionViewFlashcards(cJSON *user_context, int deck_position)
 {
-    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+    if (deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks")))
+    {
         printf("Invalid deck position.\n");
         return;
     }
@@ -101,7 +114,17 @@ void actionUpdateFlashcard(cJSON *user_context, int deck_position)
     char newBack[256];
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
-    if(flashcard_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+    if (deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks")))
+    {
+        printf("Invalid deck position.\n");
+        return;
+    }
+    cJSON *decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
+    cJSON *deck = cJSON_GetArrayItem(decks, deck_position);
+    cJSON *jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON *cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
+    if (flashcard_position >= cJSON_GetArraySize(cards))
+    {
         printf("Invalid flashcard position.\n");
         return;
     }
@@ -119,11 +142,12 @@ void actionSaveDecksToFile(cJSON *user_context)
     scanf("%s", filename);
     printf("Enter the position of the deck: ");
     int deck_position;
-    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+    scanf("%d", &deck_position);
+    if (deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks")))
+    {
         printf("Invalid deck position.\n");
         return;
     }
-    scanf("%d", &deck_position);
     saveDeckToFile(user_context, filename, deck_position);
 }
 
@@ -140,7 +164,8 @@ void actionManageDeck(cJSON *user_context)
     int deck_position;
     printf("Enter the position of the deck: ");
     scanf("%d", &deck_position);
-    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+    if (deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks")))
+    {
         printf("Invalid deck position.\n");
         return;
     }
@@ -188,7 +213,8 @@ void actionStudy()
     int deck_position;
     printf("Enter the position of the deck: ");
     scanf("%d", &deck_position);
-    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(userdata, "decks"))){
+    if (deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(userdata, "decks")))
+    {
         printf("Invalid deck position.\n");
         return;
     }
@@ -292,7 +318,9 @@ void actionStudy()
             }
         }
         printf("Congrats, you've finished this deck for now!\n");
-    } else{
+    }
+    else
+    {
         printf("There are no cards to study in this deck.\n");
     }
 }
