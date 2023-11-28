@@ -29,4 +29,5 @@ SOFTWARE.
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <uuid/uuid.h>
 #include "cJSON.h"

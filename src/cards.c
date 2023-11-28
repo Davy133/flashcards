@@ -22,17 +22,21 @@ SOFTWARE.
 
 #include "cards.h"
 
-Flashcard* createFlashcard(const char* back, const char* front, SuperMemo2 sm2) {
+Flashcard* createFlashcard(const char* back, const char* front, char* uuid, SuperMemo2 sm2) {
     Flashcard* card = (Flashcard*)malloc(sizeof(Flashcard));
+    card->UUID = strdup(uuid);
     card->front = strdup(back);
     card->back = strdup(front);
-    card->sm2 = &sm2;
+    card->sm2 = (SuperMemo2*)malloc(sizeof(SuperMemo2));
+    memcpy(card->sm2, &sm2, sizeof(SuperMemo2));
     return card;
 }
+
 
 void deleteFlashcard(Flashcard* card) {
     free(card->front);
     free(card->back);
+    free(card->sm2);
     free(card); 
 }
 
@@ -53,13 +57,16 @@ const char* getFlashcardback(const Flashcard* card) {
 
 void calculateSuperMemo2(Flashcard* card, int quality){
     SuperMemo2* sm2_Aux = card -> sm2;
+    if(quality < 0 || quality > 5){
+        return;
+    }
     if (quality >= 3){
         if (sm2_Aux -> repetitions == 0) {
             sm2_Aux -> interval = 1;
         } else if (sm2_Aux -> repetitions == 1){
             sm2_Aux -> interval = 6;
         } else {
-            sm2_Aux -> interval = round((sm2_Aux -> interval) * (sm2_Aux -> easeFactor));
+            sm2_Aux -> interval = (int) ((sm2_Aux -> interval) * (sm2_Aux -> easeFactor));
         }
         sm2_Aux -> repetitions++;
     } else {

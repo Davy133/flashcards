@@ -98,6 +98,10 @@ void updateDeck(cJSON* user_context, int position, const char* newLabel){
 }
 
 void addFlashcardToDeck(cJSON* user_context, int deck_position, char* front, char* back){
+    uuid_t uuid;
+    uuid_generate_random(uuid);
+    char* uuid_str = (char*)malloc(37);
+    uuid_unparse_upper(uuid, uuid_str);
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
     cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
@@ -108,6 +112,8 @@ void addFlashcardToDeck(cJSON* user_context, int deck_position, char* front, cha
     cJSON_AddItemToObject(cardJson, "back", cJSON_CreateString(back));
     cJSON_AddItemToObject(cardJson, "dueDate", cJSON_CreateNumber(0));
     cJSON_AddItemToObject(cardJson, "sm2", cJSON_CreateObject());
+    cJSON_AddItemToObject(cardJson, "UUID", cJSON_CreateString(uuid_str));
+    
     cJSON* card = cJSON_GetArrayItem(cards, cJSON_GetArraySize(cards) - 1);
     cJSON* sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
     cJSON_AddItemToObject(sm2, "interval", cJSON_CreateNumber(1));
