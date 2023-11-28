@@ -141,10 +141,72 @@ void actionManageDeck(cJSON* user_context){
     } while (choice != manageDeckMenu.numItems);
 }
 
+void actionStudy(){
+    cJSON* userdata = NULL;
+    userdata = initializeUserDataBus();
+    Deck *currentDeck = startDeck();
+    
+    int deck_position;
+    printf("Enter the position of the deck: ");
+    scanf("%d", &deck_position);
+
+    cJSON* decks = cJSON_GetObjectItemCaseSensitive(userdata, "decks");
+    cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
+    cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
+    cJSON* cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
+
+    cJSON* card = NULL;
+    cJSON_ArrayForEach(card, cards){
+        cJSON* front = cJSON_GetObjectItemCaseSensitive(card, "front");
+        cJSON* back = cJSON_GetObjectItemCaseSensitive(card, "back");
+        cJSON* dueDate = cJSON_GetObjectItemCaseSensitive(card, "dueDate");
+        cJSON* sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
+        cJSON* interval = cJSON_GetObjectItemCaseSensitive(sm2, "interval");
+        cJSON* repetitions = cJSON_GetObjectItemCaseSensitive(sm2, "repetitions");
+        cJSON* easeFactor = cJSON_GetObjectItemCaseSensitive(sm2, "easeFactor");
+        SuperMemo2 sm2_struct = {
+            interval -> valueint,
+            repetitions -> valueint,
+            easeFactor -> valuedouble,
+        };
+        if(dueDate -> valueint <= time(NULL)){
+            Flashcard* currentCard = createFlashcard(front -> valuestring, back -> valuestring, sm2_struct);
+            enqueueCard(currentDeck, currentCard);
+        }
+    }
+    if(!isEmpty(currentDeck)){
+        while(!isEmpty(currentDeck)){
+            int rating;
+            Flashcard* studyingCard = dequeueCard(currentDeck);
+            printf("Front: %s\n", studyingCard -> front);
+            printf("Press any key to reveal the back of the card.\n");
+            getchar();
+            printf("Back: %s\n", studyingCard -> back);
+            printf("How well did you know this card?\n");
+            printf("1 - I didn't know it at all\n");
+            printf("2 - I knew it, but I had to think about it\n");
+            printf("3 - I knew it, but I had to think about it a little\n");
+            printf("4 - I knew it, but it took me a while to remember\n");
+            printf("5 - I knew it instantly\n");
+            scanf("%d", &rating);
+            while(rating < 1 || rating > 5){
+                printf("Invalid rating. Please try again.\n");
+                scanf("%d", &rating);
+            }
+            calculateSuperMemo2(studyingCard, rating);
+            studyingCard -> dueDate = time(NULL) + studyingCard -> sm2 -> interval * 86400;
+            if(studyingCard -> dueDate < time(NULL)){
+                enqueueCard(currentDeck, studyingCard);
+            }
+        }
+        printf("Congrats, you've finished this deck for now!");
+    }
+
+}
+
 void actionManage(){
     cJSON* userdata = NULL;
     userdata = initializeUserDataBus();
-    Decks* currentDecks = startDecks();
     
     struct MenuItem manageMenuItems[] = {
         {1, "Create Deck", actionCreateDeck},
@@ -187,8 +249,9 @@ int main(void)
     cJSON* userdata = NULL;
     userdata = initializeUserDataBus();
     struct MenuItem mainMenuItems[] = {
-        {1, "Manage Decks", actionManage},
-        {2, "Quit", NULL},
+        {1, "Study Deck", actionStudy},
+        {2, "Manage Decks", actionManage},
+        {3, "Quit", NULL},
     };
 
     struct Menu mainMenu = {
