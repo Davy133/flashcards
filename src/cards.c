@@ -22,10 +22,11 @@ SOFTWARE.
 
 #include "cards.h"
 
-Flashcard* createFlashcard(const char* back, const char* front) {
+Flashcard* createFlashcard(const char* back, const char* front, SuperMemo2 sm2) {
     Flashcard* card = (Flashcard*)malloc(sizeof(Flashcard));
     card->front = strdup(back);
     card->back = strdup(front);
+    card->sm2 = &sm2;
     return card;
 }
 

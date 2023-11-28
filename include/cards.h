@@ -32,11 +32,12 @@ typedef struct SuperMemo2 {
 typedef struct Flashcard {
     char* front;
     char* back;
-    SuperMemo2* sm2; 
+    time_t dueDate;
+    SuperMemo2* sm2;
     struct Flashcard* next;
 } Flashcard;
 
-Flashcard* createFlashcard(const char* front, const char* back);
+Flashcard* createFlashcard(const char* front, const char* back, SuperMemo2 sm2);
 void deleteFlashcard(Flashcard* card);
 void updateFlashcard(Flashcard* card, const char* front, const char* back);
 const char* getFlashcardFront(const Flashcard* card);
