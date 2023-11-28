@@ -26,6 +26,9 @@ Flashcard* createFlashcard(const char* back, const char* front) {
     Flashcard* card = (Flashcard*)malloc(sizeof(Flashcard));
     card->front = strdup(back);
     card->back = strdup(front);
+    card->sm2->easeFactor = 2.5;
+    card->sm2->repetitions = 0;
+    card->sm2->interval = 1;
     return card;
 }
 

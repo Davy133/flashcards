@@ -29,3 +29,8 @@ SOFTWARE.
 #include <string.h>
 #include <math.h>
 #include "cJSON.h"
+#ifdef _WIN32 || _WIN64
+    #include <Windows.h>
+#else
+    #include <unistd.h>
+#endif
