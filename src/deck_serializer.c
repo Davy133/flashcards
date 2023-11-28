@@ -32,6 +32,12 @@ cJSON* deckToJson(Deck* deck){
         cJSON* card = cJSON_CreateObject();
         cJSON_AddItemToObject(card, "front", cJSON_CreateString(auxCard -> front));
         cJSON_AddItemToObject(card, "back", cJSON_CreateString(auxCard -> back));
+        cJSON_AddItemToObject(card, "dueDate", cJSON_CreateNumber(auxCard -> dueDate));
+        cJSON_AddItemToObject(card, "sm2", cJSON_CreateObject());
+        cJSON* sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
+        cJSON_AddItemToObject(sm2, "interval", cJSON_CreateNumber(auxCard -> sm2 -> interval));
+        cJSON_AddItemToObject(sm2, "repetitions", cJSON_CreateNumber(auxCard -> sm2 -> repetitions));
+        cJSON_AddItemToObject(sm2, "easeFactor", cJSON_CreateNumber(auxCard -> sm2 -> easeFactor));
         cJSON_AddItemToArray(cards, card);
         auxCard = auxCard -> next;
     }
