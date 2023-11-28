@@ -18,11 +18,12 @@
 </div>
 
 <div>
-<h1>How to Run</h1>
+<h1>Instalation</h1>
 <p>To use it, you can either build it by yourself or download a <a href="https://github.com/Davy133/flashcards/releases/tag/v0.0.1-alpha-fc.1">release binary.</a> </p>
-<h2>CMake</h2>
-<p>To build it, use CMake >= 3.22.1, make a build directory and run it CMake inside it.</p>
 </div>
+<div>
+<h1>Building</h1>
+<p>To build it, use CMake >= 3.22.1, make a build directory and run it CMake inside it.</p>
 
 ```bash
 #Clone this repository.
@@ -40,6 +41,7 @@ $ cd build
 #Run CMake.
 $ cmake ..
 ```
+</div>
 <div>
 <h1>License</h1>
 <p>This project is under <a href="https://github.com/Davy133/flashcards/blob/main/LICENSE">MIT License</a>.</p>
