@@ -28,4 +28,5 @@ SOFTWARE.
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include "cJSON.h"
