@@ -72,13 +72,13 @@ void actionCreateFlashcard(cJSON* user_context, int deck_position, int length){
     loadingDisplay("Creating flashcard", length);
 }
 
-void actionViewFlashcards(cJSON* user_context, int deck_position){
-    viewFlashcardsFromDeck(user_context, deck_position);
+void actionViewFlashcards(cJSON* user_context, int deck_position, int length){
+    viewFlashcardsFromDeck(user_context, deck_position, length);
 }
 
 void actionDeleteFlashcard(cJSON* user_context, int deck_position, int length){
     int flashcard_position;
-    actionViewFlashcards(user_context, deck_position);
+    actionViewFlashcards(user_context, deck_position, length);
     line(length);
     printf("\nEnter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
@@ -90,7 +90,7 @@ void actionUpdateFlashcard(cJSON* user_context, int deck_position, int length){
     int flashcard_position;
     char newFront[256];
     char newBack[256];
-    actionViewFlashcards(user_context, deck_position);
+    actionViewFlashcards(user_context, deck_position, length);
     line(length);
     printf("\nEnter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
@@ -143,7 +143,7 @@ void actionManageDeck(cJSON* user_context, int length){
     int choice;
 
     do {
-        actionViewFlashcards(user_context, deck_position);
+        actionViewFlashcards(user_context, deck_position, length);
         displayMenu(&manageDeckMenu, length);
         choice = handleMenuInput(&manageDeckMenu);
 

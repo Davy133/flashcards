@@ -60,7 +60,7 @@ void deleteDeck(int position, cJSON* user_context){
 }
 
 void viewDecks(cJSON* user_context, int length){
-    printf("%*s\n\n", 8 + ((length - 8)/2) ,"D E K S");
+    printf("%*s\n\n", 16 + ((length - 16)/2) ,"Y O U R  D E K S");
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = NULL;
     int index = 0;
@@ -74,12 +74,12 @@ void viewDecks(cJSON* user_context, int length){
     printf("\n");
 }
 
-void viewDeck(cJSON* user_context, int position){
+void viewDeck(cJSON* user_context, int position, int length){
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = cJSON_GetArrayItem(decks, position);
     cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
     cJSON* label = cJSON_GetObjectItemCaseSensitive(jsonDeck, "label");
-    printf("Deck %d: %s\n", position, label->valuestring);
+    printf("%*s - %d: %s\n", (length - (strlen(label->valuestring) + 11))/2 + 7 , "D E C K", position, label->valuestring);
 }
 
 void updateDeck(cJSON* user_context, int position, const char* newLabel){
@@ -123,19 +123,20 @@ void removeFlashcardFromDeck(cJSON* user_context, int deck_position, int flashca
     *user_context = *initializeUserDataBus();
 }
 
-void viewFlashcardsFromDeck(cJSON* user_context, int deck_position){
+void viewFlashcardsFromDeck(cJSON* user_context, int deck_position, int length){
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
     cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
     cJSON* cards = cJSON_GetObjectItemCaseSensitive(jsonDeck, "cards");
     cJSON* card = NULL;
     int index = 0;
+    viewDeck(user_context, deck_position, length);
     cJSON_ArrayForEach(card, cards){
         cJSON* front = cJSON_GetObjectItemCaseSensitive(card, "front");
         cJSON* back = cJSON_GetObjectItemCaseSensitive(card, "back");
-        printf("Flashcard %d:\n", index);
-        printf("Front: %s\n", front -> valuestring);
-        printf("Back: %s\n", back -> valuestring);
+        printf("\nFlashcard - %d\n", index);
+        printf("\nFront: %s\n", front -> valuestring);
+        printf("Back: %s\n\n", back -> valuestring);
         index++;
     }
 }
