@@ -288,6 +288,7 @@ void actionStudy()
                         }
                     }
                 }
+                deleteFlashcard(studyingCard);
             }
         }
         printf("Congrats, you've finished this deck for now!\n");
