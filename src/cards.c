@@ -49,16 +49,6 @@ void updateFlashcard(Flashcard *card, const char *back, const char *front)
     card->back = strdup(front);
 }
 
-const char *getFlashcardfront(const Flashcard *card)
-{
-    return card->front;
-}
-
-const char *getFlashcardback(const Flashcard *card)
-{
-    return card->back;
-}
-
 void calculateSuperMemo2(Flashcard *card, int quality)
 {
     SuperMemo2 *sm2_Aux = card->sm2;

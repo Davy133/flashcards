@@ -41,6 +41,5 @@ typedef struct Flashcard {
 Flashcard* createFlashcard(const char* front, const char* back, char* uuid, SuperMemo2 sm2);
 void deleteFlashcard(Flashcard* card);
 void updateFlashcard(Flashcard* card, const char* front, const char* back);
-const char* getFlashcardFront(const Flashcard* card);
 
 void calculateSuperMemo2(Flashcard* card, int quality);
