@@ -12,7 +12,7 @@
 <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Davy133/flashcards">
 <img alt="GitHub" src="https://img.shields.io/github/license/Davy133/flashcards">
 </div>
-<div align="center">
+
 <img src="https://github.com/Davy133/flashcards/assets/55928285/91591882-cbfd-45c2-a7a4-69f69b6b5d20" alt="flashcards" width="640" height="320" /></br>
 </div>
 <div>
