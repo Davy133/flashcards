@@ -41,7 +41,7 @@ Decks* startDecks();
 
 void createDeck(char* deckName, cJSON* user_context);
 void deleteDeck(int position, cJSON* user_context);
-void viewDecks(cJSON* user_context);
+void viewDecks(cJSON* user_context, int length);
 void viewDeck(cJSON* user_context, int position);
 void updateDeck(cJSON* user_context, int position, const char* newLabel);
 

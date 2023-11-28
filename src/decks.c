@@ -59,17 +59,19 @@ void deleteDeck(int position, cJSON* user_context){
     }
 }
 
-void viewDecks(cJSON* user_context){
-    printf("Decks:\n");
+void viewDecks(cJSON* user_context, int length){
+    printf("%*s\n\n", 8 + ((length - 8)/2) ,"D E K S");
     cJSON* decks = cJSON_GetObjectItemCaseSensitive(user_context, "decks");
     cJSON* deck = NULL;
     int index = 0;
     cJSON_ArrayForEach(deck, decks){
         cJSON* jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
         cJSON* label = cJSON_GetObjectItemCaseSensitive(jsonDeck, "label");
-        printf("Deck %d: %s\n", index, label->valuestring);
+        printf("Deck %d - %s\n", index, label->valuestring);
         index++;
         }
+    //TODO: Mostrar uma mensagem dizendo que não há decks caso não haja de fato nenhum deck criado.
+    printf("\n");
 }
 
 void viewDeck(cJSON* user_context, int position){

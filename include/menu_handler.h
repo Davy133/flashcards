@@ -35,6 +35,14 @@ struct Menu {
     int numItems;
 };
 
-void displayMenu(const struct Menu* menu);
+void line (int length);
+void topMargin(int length);
+void downMargin(int length);
+int leftIndentCalculation (const struct Menu* menu, int length);
+
+void displayMenu(const struct Menu* menu, int length);
 
 int handleMenuInput(const struct Menu* menu);
+
+void mySleep();
+void loadingDisplay(const char* loading_message, int length);
