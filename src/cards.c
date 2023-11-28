@@ -81,5 +81,7 @@ void calculateSuperMemo2(Flashcard *card, int quality)
     if (sm2_Aux->easeFactor < 1.3)
     {
         sm2_Aux->easeFactor = 1.3;
+    }else if(sm2_Aux->easeFactor > 2.5){
+        sm2_Aux->easeFactor = 2.5;
     }
 }
