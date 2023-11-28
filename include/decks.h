@@ -29,15 +29,16 @@ typedef struct Deck {
     char* label;
     Flashcard* first;
     Flashcard* last;
-    struct Deck* next;
 } Deck;
 
-typedef struct Decks {
-    Deck* first;
-    Deck* last;
-} Decks;
+// typedef struct Decks {
+//     Deck* first;
+//     Deck* last;
+// } Decks;
 
-Decks* startDecks();
+// Decks* startDecks();
+
+Deck* startDeck();
 
 void createDeck(char* deckName, cJSON* user_context);
 void deleteDeck(int position, cJSON* user_context);
@@ -52,6 +53,6 @@ void viewFlashcardsFromDeck(cJSON* user_context, int deck_position);
 
 void enqueueCard(Deck* deck, Flashcard* card);
 Flashcard* dequeueCard(Deck* deck); 
-
+int isEmpty(Deck* deck);
 void sortDeck(Deck* deck);
 void studyDeck(Deck* deck);

@@ -23,15 +23,15 @@ SOFTWARE.
 #include <decks.h>
 #include <user_data_bus.h>
 
-Decks* startDecks(){
-    Decks* decks = (Decks*) malloc(sizeof(Decks));
-    if (decks != NULL){
-        decks -> first = NULL;
-        decks -> last = NULL;
+Deck* startDeck(){
+    Deck* deck = (Deck*) malloc(sizeof(Deck));
+    if (deck != NULL){
+        deck -> first = NULL;
+        deck -> last = NULL;
     } else {
         printf("Initialization failed.\n");
     }
-    return decks;
+    return deck;
 }
 
 void createDeck(char* deckName, cJSON* user_context){
@@ -106,6 +106,13 @@ void addFlashcardToDeck(cJSON* user_context, int deck_position, char* front, cha
     cJSON_AddItemToArray(cards, cardJson);
     cJSON_AddItemToObject(cardJson, "front", cJSON_CreateString(front));
     cJSON_AddItemToObject(cardJson, "back", cJSON_CreateString(back));
+    cJSON_AddItemToObject(cardJson, "dueDate", cJSON_CreateNumber(0));
+    cJSON_AddItemToObject(cardJson, "sm2", cJSON_CreateObject());
+    cJSON* card = cJSON_GetArrayItem(cards, cJSON_GetArraySize(cards) - 1);
+    cJSON* sm2 = cJSON_GetObjectItemCaseSensitive(card, "sm2");
+    cJSON_AddItemToObject(sm2, "interval", cJSON_CreateNumber(1));
+    cJSON_AddItemToObject(sm2, "repetitions", cJSON_CreateNumber(0));
+    cJSON_AddItemToObject(sm2, "easeFactor", cJSON_CreateNumber(2.5));
     saveUserData(user_context);
     *user_context = *initializeUserDataBus();
 }
@@ -167,4 +174,28 @@ void studyDeck(Deck* deck){
     } else {
         printf("Your flashcard list is empty.\n");
     }
+}
+
+void enqueueCard(Deck* deck, Flashcard* card){
+    if (deck -> first == NULL) {
+        deck -> first = card;
+        deck -> last = card;
+    } else {
+        deck -> last -> next = card;
+        deck -> last = card;
+    }
+    card -> next = NULL;
+}
+
+Flashcard* dequeueCard(Deck* deck){
+    Flashcard* auxCard = deck -> first;
+    if (deck -> first != NULL){
+        deck -> first = deck -> first -> next;
+        auxCard -> next = NULL;
+    }
+    return auxCard;
+}
+
+int isEmpty(Deck* deck) {
+    return deck->first == NULL;
 }
