@@ -44,34 +44,42 @@ SOFTWARE.
 //     return json;
 // }
 
-void saveDeckToFile(cJSON* user_context, const char* filename, int deck_position){
-    cJSON* decks = cJSON_GetObjectItem(user_context, "decks");
-    cJSON* deck = cJSON_GetArrayItem(decks, deck_position);
-    char* jsonStr = cJSON_Print(deck);
-    FILE* file = fopen(filename, "w");
-    if (file != NULL){
+void saveDeckToFile(cJSON *user_context, const char *filename, int deck_position)
+{
+    cJSON *decks = cJSON_GetObjectItem(user_context, "decks");
+    cJSON *deck = cJSON_GetArrayItem(decks, deck_position);
+    char *jsonStr = cJSON_Print(deck);
+    FILE *file = fopen(filename, "w");
+    if (file != NULL)
+    {
         fputs(jsonStr, file);
         fclose(file);
-    } else {
+    }
+    else
+    {
         printf("Failed to save deck.\n");
     }
     free(jsonStr);
 }
 
-void loadDeckFromFile(const char* filename, cJSON* user_context){
-    FILE* file = fopen(filename, "r");
-    if (file != NULL){
+void loadDeckFromFile(const char *filename, cJSON *user_context)
+{
+    FILE *file = fopen(filename, "r");
+    if (file != NULL)
+    {
         fseek(file, 0, SEEK_END);
         long file_size = ftell(file);
         fseek(file, 0, SEEK_SET);
-        char* json_data = malloc(file_size + 1);
+        char *json_data = malloc(file_size + 1);
         fread(json_data, 1, file_size, file);
         fclose(file);
-        cJSON* deck = cJSON_Parse(json_data);
+        cJSON *deck = cJSON_Parse(json_data);
         free(json_data);
-        cJSON* decks = cJSON_GetObjectItem(user_context, "decks");
+        cJSON *decks = cJSON_GetObjectItem(user_context, "decks");
         cJSON_AddItemToArray(decks, deck);
-    } else {
+    }
+    else
+    {
         printf("Failed to load deck.\n");
     }
 }

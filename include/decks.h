@@ -25,10 +25,11 @@ SOFTWARE.
 #include "deck_serializer.h"
 #include "cards.h"
 
-typedef struct Deck {
-    char* label;
-    Flashcard* first;
-    Flashcard* last;
+typedef struct Deck
+{
+    char *label;
+    Flashcard *first;
+    Flashcard *last;
 } Deck;
 
 // typedef struct Decks {
@@ -38,21 +39,21 @@ typedef struct Deck {
 
 // Decks* startDecks();
 
-Deck* startDeck();
+Deck *startDeck();
 
-void createDeck(char* deckName, cJSON* user_context);
-void deleteDeck(int position, cJSON* user_context);
-void viewDecks(cJSON* user_context);
-void viewDeck(cJSON* user_context, int position);
-void updateDeck(cJSON* user_context, int position, const char* newLabel);
+void createDeck(char *deckName, cJSON *user_context);
+void deleteDeck(int position, cJSON *user_context);
+void viewDecks(cJSON *user_context);
+void viewDeck(cJSON *user_context, int position);
+void updateDeck(cJSON *user_context, int position, const char *newLabel);
 
-void addFlashcardToDeck(cJSON* user_context, int deck_position, char* front, char* back);
-void removeFlashcardFromDeck(cJSON* user_context, int deck_position, int flashcard_position);
-void updateFlashcardFromDeck(cJSON* user_context, int deck_position, int flashcard_position, const char* newFront, const char* newBack);
-void viewFlashcardsFromDeck(cJSON* user_context, int deck_position);
+void addFlashcardToDeck(cJSON *user_context, int deck_position, char *front, char *back);
+void removeFlashcardFromDeck(cJSON *user_context, int deck_position, int flashcard_position);
+void updateFlashcardFromDeck(cJSON *user_context, int deck_position, int flashcard_position, const char *newFront, const char *newBack);
+void viewFlashcardsFromDeck(cJSON *user_context, int deck_position);
 
-void enqueueCard(Deck* deck, Flashcard* card);
-Flashcard* dequeueCard(Deck* deck); 
-int isEmpty(Deck* deck);
-void sortDeck(Deck* deck);
-void studyDeck(Deck* deck);
+void enqueueCard(Deck *deck, Flashcard *card);
+Flashcard *dequeueCard(Deck *deck);
+int isEmpty(Deck *deck);
+void sortDeck(Deck *deck);
+void studyDeck(Deck *deck);

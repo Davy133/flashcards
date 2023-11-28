@@ -266,7 +266,9 @@ void actionStudy()
             }
         }
         printf("Congrats, you've finished this deck for now!\n");
-    } else{
+    }
+    else
+    {
         printf("There are no cards to study in this deck.\n");
     }
 }
