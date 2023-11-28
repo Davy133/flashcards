@@ -32,13 +32,6 @@ typedef struct Deck
     Flashcard *last;
 } Deck;
 
-// typedef struct Decks {
-//     Deck* first;
-//     Deck* last;
-// } Decks;
-
-// Decks* startDecks();
-
 Deck *startDeck();
 
 void createDeck(char *deckName, cJSON *user_context);
