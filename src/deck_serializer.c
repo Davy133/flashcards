@@ -48,6 +48,15 @@ void saveDeckToFile(cJSON *user_context, const char *filename, int deck_position
 {
     cJSON *decks = cJSON_GetObjectItem(user_context, "decks");
     cJSON *deck = cJSON_GetArrayItem(decks, deck_position);
+    cJSON *cards = cJSON_GetObjectItem(deck, "cards");
+    cJSON *card = NULL;
+    cJSON_ArrayForEach(card, cards)
+    {
+        cJSON *sm2 = cJSON_GetObjectItem(card, "sm2");
+        cJSON_AddNumberToObject(sm2, "interval", 1);
+        cJSON_AddNumberToObject(sm2, "repetitions", 0);
+        cJSON_AddNumberToObject(sm2, "easeFactor", 2.5);
+    }
     char *jsonStr = cJSON_Print(deck);
     FILE *file = fopen(filename, "w");
     if (file != NULL)

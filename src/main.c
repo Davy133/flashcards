@@ -53,6 +53,10 @@ void actionUpdateDeck(cJSON *user_context)
     char newLabel[256];
     printf("Enter the position of the deck: ");
     scanf("%d", &position);
+    if(position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+        printf("Invalid deck position.\n");
+        return;
+    }
     printf("Enter the new name of the deck: ");
     scanf("%s", newLabel);
     updateDeck(user_context, position, newLabel);
@@ -74,11 +78,19 @@ void actionDeleteFlashcard(cJSON *user_context, int deck_position)
     int flashcard_position;
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
+    if(flashcard_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+        printf("Invalid flashcard position.\n");
+        return;
+    }
     removeFlashcardFromDeck(user_context, deck_position, flashcard_position);
 }
 
 void actionViewFlashcards(cJSON *user_context, int deck_position)
 {
+    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+        printf("Invalid deck position.\n");
+        return;
+    }
     viewFlashcardsFromDeck(user_context, deck_position);
 }
 
@@ -89,6 +101,10 @@ void actionUpdateFlashcard(cJSON *user_context, int deck_position)
     char newBack[256];
     printf("Enter the position of the flashcard: ");
     scanf("%d", &flashcard_position);
+    if(flashcard_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+        printf("Invalid flashcard position.\n");
+        return;
+    }
     printf("Enter the new front of the flashcard: ");
     scanf("%s", newFront);
     printf("Enter the new back of the flashcard: ");
@@ -103,6 +119,10 @@ void actionSaveDecksToFile(cJSON *user_context)
     scanf("%s", filename);
     printf("Enter the position of the deck: ");
     int deck_position;
+    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+        printf("Invalid deck position.\n");
+        return;
+    }
     scanf("%d", &deck_position);
     saveDeckToFile(user_context, filename, deck_position);
 }
@@ -120,6 +140,10 @@ void actionManageDeck(cJSON *user_context)
     int deck_position;
     printf("Enter the position of the deck: ");
     scanf("%d", &deck_position);
+    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(user_context, "decks"))){
+        printf("Invalid deck position.\n");
+        return;
+    }
 
     struct MenuItem manageDeckMenuItems[] = {
         {1, "Create Flashcard", actionCreateFlashcard},
@@ -164,6 +188,10 @@ void actionStudy()
     int deck_position;
     printf("Enter the position of the deck: ");
     scanf("%d", &deck_position);
+    if(deck_position >= cJSON_GetArraySize(cJSON_GetObjectItemCaseSensitive(userdata, "decks"))){
+        printf("Invalid deck position.\n");
+        return;
+    }
     cJSON *decks = cJSON_GetObjectItemCaseSensitive(userdata, "decks");
     cJSON *deck = cJSON_GetArrayItem(decks, deck_position);
     cJSON *jsonDeck = cJSON_GetObjectItemCaseSensitive(deck, "deck");
@@ -255,20 +283,15 @@ void actionStudy()
                             cJSON_SetNumberValue(interval, studyingCard->sm2->interval);
                             cJSON_SetNumberValue(repetitions, studyingCard->sm2->repetitions);
                             easeFactor->valuedouble = studyingCard->sm2->easeFactor;
-
                             saveUserData(userdata);
                             *userdata = *initializeUserDataBus();
                         }
-                        saveUserData(userdata);
-                        *userdata = *initializeUserDataBus();
                     }
                 }
             }
         }
         printf("Congrats, you've finished this deck for now!\n");
-    }
-    else
-    {
+    } else{
         printf("There are no cards to study in this deck.\n");
     }
 }

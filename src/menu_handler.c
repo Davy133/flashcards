@@ -38,7 +38,11 @@ int handleMenuInput(const struct Menu *menu)
     int choice;
     printf("\n");
     printf("Enter your choice: ");
-    scanf("%d", &choice);
+    if(scanf("%d", &choice) == 0)
+    {
+        fgetc(stdin);
+        return -1;
+    }
     printf("\n");
     return choice;
 }
